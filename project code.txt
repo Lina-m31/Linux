@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#This script will do a backup to /var/log and save it in the root. 
+#Section 1: check the user : " 
+
+if [[ "$(whoami)" = 'root' ]]; then 
+
+#Section 2 : create the backup archive"
+
+     echo -e "Backup process started 💻..\n"
+     echo -e "⏳..\n "
+
+ mkdir -p /root/Backup/Backup_Reports
+ mkdir -p /root/Backup/Backup_Archive
+ touch /root/Backup/Backup_Reports/backup_Report_$(date +%Y%m%d_%H%M).txt 
+ echo " The backup is successful for $(date +%Y%m%d_%H%M)" >> /root/Backup/Backup_Reports/backup_Report_$(date +%Y%m%d_%H%M).txt 
+     echo -e "⏳..\n "
+ tar -cvf /root/Backup/Backup_Archive/backup_$(date +%Y%m%d_%H%M).tar /var/log >> /root/Backup/Backup_Reports/backup_Report_$(date +%Y%m%d_%H%M).txt  
+   
+   echo " Your Backup is ready , check the root directory 📦 "
+   notify-send  " Backup complete succsfully 🌏" 
+
+#Section 3 :remove the archived backup older than 7 days:
+
+find /root/Backup/Backup_Reports/*.txt -mtime +7 -delete
+find /root/Backup/Backup_Archive/*.tar -mtime +7 -delete
+
+
+# Not root user , the scipt will not work:
+else
+  echo " please login using root to run this script " 
+fi
+
+
